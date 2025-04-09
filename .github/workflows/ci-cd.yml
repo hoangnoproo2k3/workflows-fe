@@ -1,0 +1,44 @@
+name: CI/CD for Frontend
+
+# Khi nào workflow sẽ chạy
+on:
+  push:
+    branches:
+      - main
+
+# Các bước thực thi
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Hệ điều hành để chạy workflow
+
+    steps:
+      # Bước 1: Checkout code từ repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Bước 2: Cài đặt Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # Chọn phiên bản Node.js phù hợp với Next.js
+
+      # Bước 3: Cài đặt dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Bước 4: Build ứng dụng Next.js
+      - name: Build Next.js app
+        run: npm run build
+
+      # Bước 5: Login vào Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} # Biến bí mật chứa username
+          password: ${{ secrets.DOCKER_PASSWORD }} # Biến bí mật chứa password
+
+      # Bước 6: Build và push Docker image
+      - name: Build and push Docker image
+        run: |
+          docker build -t your-username/your-frontend-image:latest .
+          docker push your-username/your-frontend-image:latest
