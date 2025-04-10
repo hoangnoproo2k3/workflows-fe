@@ -1,7 +1,3 @@
 export default function Home() {
-  return (
-    <div className="text-white bg-amber-300">
-      test thử deploy xem nào oh shit
-    </div>
-  );
+  return <div className="text-white h-full text-5xl">Hello world</div>;
 }
